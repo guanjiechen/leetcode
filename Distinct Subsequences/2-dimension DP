@@ -1,0 +1,56 @@
+class Solution {
+public:
+    int numDistinct(string S, string T) {
+    int t=T.size();
+    int s=S.size();
+    int adj[t][s];
+    int i,j;
+    for( i=0;i<t;i++)
+        for( j=0;j<s;j++)
+            adj[i][j]=0;
+    if(S[0]==T[0])
+        adj[0][0]=1;
+    else
+        adj[0][0]=0;
+    for(j=1;j<s;j++)
+    {
+        if(S[j]==T[0])
+            adj[0][j]=adj[0][j-1]+1;
+        else
+            adj[0][j]=adj[0][j-1];
+    }
+    for(i=1;i<t;i++)
+    {
+        for(j=0;j<s;j++)
+        {
+            if(j<i)
+                adj[i][j]=0;
+            else if(i==j)
+            {
+                if(S[j]==T[i])
+                    adj[i][j]=adj[i-1][j-1];
+                else
+                    adj[i][j]=0;
+            }
+            else
+            {
+                if(S[j]==T[i])
+                    adj[i][j] = adj[i][j-1] + adj[i-1][j-1];
+                else
+                    adj[i][j] = adj[i][j-1];
+            }
+        }
+    }
+    return adj[t-1][s-1];
+
+}
+
+};
+
+
+/* i is length of substr, j is mother
+ * s[i][j] = s[i][j-1]  last char not identical
+ *
+ * s[i][j] = s[i][j-1] + s[i-1][j-1] last char identical
+ * http://fisherlei.blogspot.com/2012/12/leetcode-distinct-subsequences_19.html
+ */
